@@ -9,6 +9,7 @@ function App() {
   const [nuCount, setNucount] = useState(0);
   const [enReCount, setEnrecount] = useState(0);
   const [cnReCount, setCnrecount] = useState(0);
+  const [spCount, setSpcount] = useState(0);
 
   const reg = /[\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u201c\u201d\u2018\u2019\uff08\uff09\u300a\u300b\u3008\u3009\u3010\u3011\u300e\u300f\u300c\u300d\uff43\uff44\u3014\u3015\u2026\u2014\uff5e\uff4f\uffe5]/;
 
@@ -21,14 +22,13 @@ function App() {
           <img src={reactLogo} className="framework" alt="React logo" />
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div> */}
-        <div>
+        <div className='content_left'>
           <h2>标题字符统计</h2>
-          <h5><p>中文汉字占两个字符</p>
-            <p>数字英文空格占一个字符</p>
-            <p>中文标点符号占两个字符</p>
-            <p>英文标点符号占一个字符</p>
+          <h5>
+            <p>中文汉字标点符号占两个字符</p>
+            <p>英文数字标点符号占一个字符</p>
           </h5>
-          <textarea className='txtinput' rows={5} cols={40} name='myTextarea' autoFocus={true} onChange={e => {
+          <textarea className='txtinput' rows={8} cols={50} name='myTextarea' autoFocus={true} onChange={e => {
 
             setCount(0);
             setCncount(0);
@@ -36,6 +36,7 @@ function App() {
             setNucount(0);
             setEnrecount(0);
             setCnrecount(0);
+            setSpcount(0);
 
             const str = e.target.value;
 
@@ -53,6 +54,9 @@ function App() {
               } else if (reg.test(ch)) {
                 setCnrecount(a => a + 2);
                 setCount(a => a + +2);
+              } else if (/\s/.test(ch)) {
+                setSpcount(a => a + 1);
+                setCount(a => a + 1);
               } else {
                 setEnrecount(a => a + 1);
                 setCount(a => a + 1);
@@ -61,23 +65,36 @@ function App() {
 
           }} />
         </div>
-        <div className="counter">
+        <div className='content_right'>
+          <div className="counter">
+            总长度： {count}
+          </div>
+          <div className="counter">
+            中文：{cnCount}
+          </div>
+          <div className="counter">
+            英文：{enCount}
+          </div>
+          <div className="counter">
+            数字：{nuCount}
+          </div>
+          <div className="counter">
+            中文符号：{cnReCount}
+          </div>
+          <div className="counter">
+            英文符号：{enReCount}
+          </div>
+          <div className="counter">
+            空格：{spCount}
+          </div>
+        </div>
 
-          字符长度： {count}/60
-        </div>
-        <div className="counter">
-          中文：{cnCount};
-          英文：{enCount};
-          数字：{nuCount};
-          中文符号：{cnReCount};
-          英文符号(含空格)：{enReCount};
-        </div>
       </section>
 
       {/* <div className="ticks"></div> */}
 
-      <section id="next-steps">
-        {/* <div id="docs">
+      {/* <section id="next-steps">
+        <div id="docs">
           <svg className="icon" role="presentation" aria-hidden="true">
             <use href="/icons.svg#documentation-icon"></use>
           </svg>
@@ -86,13 +103,13 @@ function App() {
           <ul>
             <li>
               <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
+                <img className="logo" alt="" />
                 Explore Vite
               </a>
             </li>
             <li>
               <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
+                <img className="button-icon" alt="" />
                 Learn more
               </a>
             </li>
@@ -154,11 +171,11 @@ function App() {
               </a>
             </li>
           </ul>
-        </div> */}
-      </section>
+        </div>
+      </section> */}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      {/* <div className="ticks"></div>
+      <section id="spacer"></section> */}
     </>
   )
 }
