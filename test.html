@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>暗黑模式 · 优雅 Textarea 样式</title>
+    <style>
+        /* ================================================
+           全局重置 & 演示背景 (仅用于展示暗黑氛围，非必须)
+           实际项目只需复制 .dark-textarea 或相关样式即可
+        ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0b0c10, #030507);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: system-ui, 'Segoe UI', 'SF Pro Text', 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            padding: 2rem;
+        }
+
+        /* 演示卡片容器 (仅为视觉布局，样式独立) */
+        .demo-card {
+            max-width: 780px;
+            width: 100%;
+            background: rgba(18, 20, 28, 0.65);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            padding: 2rem 1.8rem 2.2rem 1.8rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(75, 85, 99, 0.2);
+            transition: all 0.2s;
+        }
+
+        .demo-title {
+            font-size: 1.6rem;
+            font-weight: 550;
+            letter-spacing: -0.01em;
+            background: linear-gradient(135deg, #E9F1FF, #B9C8FF);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-sub {
+            color: #9AA2B9;
+            font-size: 0.85rem;
+            border-left: 3px solid #4A6CF7;
+            padding-left: 0.75rem;
+            margin-bottom: 1.8rem;
+            font-weight: 400;
+        }
+
+        /* ---------- 🔥 核心推荐：暗黑模式 Textarea 样式 (独立类名，可直接复用) ---------- */
+        .dark-textarea {
+            /* 基础外观 */
+            width: 100%;
+            min-height: 160px;
+            padding: 14px 18px;
+
+            /* 字体与排版 */
+            font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace, system-ui;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            font-weight: 450;
+            color: #EDF2FB;
+            /* 柔和亮白文本 */
+            caret-color: #7C8EFF;
+            /* 个性光标色 */
+
+            /* 背景 & 边框 */
+            background-color: #101218;
+            border: 1px solid #2A2E3F;
+            border-radius: 18px;
+
+            /* 交互过渡 */
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+
+            /* 调整大小限制 */
+            resize: vertical;
+
+            /* 移除默认轮廓，后续用自定义焦点样式 */
+            outline: none;
+
+            /* 文本选中样式 (深色模式专用) */
+            ::selection {
+                background-color: #2C3E6B;
+                color: #FFFFFF;
+            }
+
+            ::-moz-selection {
+                background-color: #2C3E6B;
+                color: #FFFFFF;
+            }
+        }
+
+        /* Placeholder 优雅暗色风格 */
+        .dark-textarea::placeholder {
+            color: #5C627F;
+            font-weight: 400;
+            font-size: 0.9rem;
+            letter-spacing: -0.2px;
+            transition: color 0.2s;
+        }
+
+        /* 悬停效果：提升边界质感 */
+        .dark-textarea:hover {
+            border-color: #4E5679;
+            background-color: #0F111B;
+        }
+
+        /* 焦点时刻 — 发光且精致 */
+        .dark-textarea:focus {
+            border-color: #6D85FF;
+            background-color: #0C0E16;
+            box-shadow: 0 0 0 3px rgba(109, 133, 255, 0.25), 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 禁用状态 (暗色风格适用) */
+        .dark-textarea:disabled {
+            opacity: 0.5;
+            background-color: #191C26;
+            border-color: #2F3243;
+            color: #8F95B0;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* 只读状态保留柔和视觉 */
+        .dark-textarea:read-only {
+            background-color: #151824;
+            border-color: #33384D;
+            cursor: default;
+        }
+
+        /* ========== 针对暗黑模式自定义滚动条 (WebKit内核，Chrome/Edge/Safari) ========== */
+        .dark-textarea::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-textarea::-webkit-scrollbar-track {
+            background: #191D2A;
+            border-radius: 20px;
+            margin-block: 6px;
+        }
+
+        .dark-textarea::-webkit-scrollbar-thumb {
+            background: #404668;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+
+        .dark-textarea::-webkit-scrollbar-thumb:hover {
+            background: #5D72B3;
+        }
+
+        /* Firefox 滚动条样式 (更现代) */
+        .dark-textarea {
+            scrollbar-width: thin;
+            scrollbar-color: #404668 #191D2A;
+        }
+
+        /* ---------- 额外展示场景: 如果想让系统暗黑模式自动适配 (媒体查询方案) 但上面的类名方式最灵活 ----------
+           也可以直接将以下代码加入项目，在 body.dark 或 .dark-theme 下使用 .dark-textarea 或者重写，这里展示纯类方式足够专业。
+        */
+
+        /* 辅助布局样式 (非textarea核心样式，仅为了让演示更友好) */
+        .demo-group {
+            margin-top: 1rem;
+        }
+
+        .demo-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: #C9D1E8;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .demo-label span {
+            background: #242837;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #AEB9F0;
+            letter-spacing: 0.3px;
+        }
+
+        .flex-note {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            background: #1B1F2C;
+            padding: 6px 12px;
+            border-radius: 40px;
+            color: #98A1C2;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(2px);
+        }
+
+        .badge code {
+            background: #0B0E16;
+            padding: 2px 8px;
+            border-radius: 30px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #BFCAFF;
+        }
+
+        hr {
+            margin: 1.3rem 0 0.5rem;
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, #2A2F42, #4A5070, #2A2F42);
+        }
+
+        button {
+            background: #232736;
+            border: 1px solid #3D435F;
+            color: #E0E7FF;
+            padding: 6px 12px;
+            border-radius: 32px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background: #2F354E;
+            border-color: #6D7ACC;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="demo-card">
+        <div class="demo-title">
+            ✦ 暗夜·静谧输入区
+        </div>
+        <div class="demo-sub">
+            精心打磨的暗黑模式 textarea · 高对比·呼吸感·专业适配
+        </div>
+
+        <!-- 核心演示区：直接使用推荐的 .dark-textarea 类，获得完整暗黑风格 -->
+        <div class="demo-group">
+            <div class="demo-label">
+                📝 暗黑风格 textarea
+                <span>推荐样式</span>
+            </div>
+            <textarea class="dark-textarea" rows="5"
+                placeholder="输入你的想法、代码片段或笔记… 深色主题让长时间编码/写作更舒适。&#10;&#10;✨ 支持自定义滚动条 & 优雅焦点光效">在这里书写内容 — 暗黑模式下的完美视觉
+• 背景 #101218 搭配 #EDF2FB 文字
+• 柔光聚焦 + 悬停质感
+• 滚动条深度定制
+• 兼容现代浏览器 & 暗色主题</textarea>
+        </div>
+
+        <!-- 额外展示: 禁用/只读的状态演示 (用于说明样式的全面性，非必须但专业) -->
+        <div class="flex-note">
+            <div style="flex:1; min-width: 160px;">
+                <div class="demo-label" style="margin-bottom: 6px;">
+                    🔒 禁用状态示例
+                </div>
+                <textarea class="dark-textarea" rows="2" disabled
+                    placeholder="禁用时的暗黑样式 (不可编辑)">已禁用 · 样式依然保留深色质感</textarea>
+            </div>
+            <div style="flex:1; min-width: 160px;">
+                <div class="demo-label" style="margin-bottom: 6px;">
+                    📖 只读状态示例
+                </div>
+                <textarea class="dark-textarea" rows="2" readonly
+                    placeholder="只读模式，保留视觉统一">这是一个只读的暗黑风格文本框，适合展示静态内容</textarea>
+            </div>
+        </div>
+
+        <hr />
+
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 12px;">
+            <div class="badge">
+                🎨 类名：<code>.dark-textarea</code>
+            </div>
+            <div class="badge">
+                🌙 搭配方案：父级暗色背景 / 主题切换
+            </div>
+            <div class="badge" id="toggleHintBtn" style="cursor: pointer;"
+                onclick="alert('✨ 核心样式已提供 .dark-textarea 类，可直接引入项目或配合系统深色模式使用媒体查询拓展。')">
+                📋 使用提示 ⚡
+            </div>
+        </div>
+
+        <div
+            style="margin-top: 1.6rem; background: #0B0E16; border-radius: 22px; padding: 0.9rem 1.2rem; border: 1px solid #242837;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                <span style="font-weight: 500; color: #B9CAFF;">⎯ 样式核心代码片段 ⎯</span>
+                <span
+                    style="font-size: 0.7rem; background: #00000040; padding: 2px 8px; border-radius: 24px; color: #A5B3E6;">直接复制使用</span>
+            </div>
+            <pre
+                style="color: #CDD9F4; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; overflow-x: auto; background: #05070C; padding: 14px; border-radius: 18px; margin: 0; white-space: pre-wrap; word-break: break-word;"><code>.dark-textarea {
+    width: 100%;
+    min-height: 160px;
+    padding: 14px 18px;
+    font-family: monospace, system-ui;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #EDF2FB;
+    caret-color: #7C8EFF;
+    background-color: #101218;
+    border: 1px solid #2A2E3F;
+    border-radius: 18px;
+    resize: vertical;
+    outline: none;
+    transition: all 0.2s ease;
+}
+.dark-textarea::placeholder { color: #5C627F; }
+.dark-textarea:hover {
+    border-color: #4E5679;
+    background-color: #0F111B;
+}
+.dark-textarea:focus {
+    border-color: #6D85FF;
+    background-color: #0C0E16;
+    box-shadow: 0 0 0 3px rgba(109, 133, 255, 0.25);
+}
+/* 自定义滚动条 (webkit + firefox) */
+.dark-textarea::-webkit-scrollbar { width: 8px; }
+.dark-textarea::-webkit-scrollbar-track { background: #191D2A; border-radius: 20px; }
+.dark-textarea::-webkit-scrollbar-thumb { background: #404668; border-radius: 20px; }
+.dark-textarea { scrollbar-width: thin; scrollbar-color: #404668 #191D2A; }</code></pre>
+        </div>
+        <div
+            style="margin-top: 1.2rem; font-size: 0.7rem; color: #6A7191; text-align: center; border-top: 1px solid #202433; padding-top: 1rem;">
+            💡 设计亮点 | 对比度可达 AAA 级 | 完美适配暗色主题 | 支持悬停/焦点/禁用/只读全状态
+        </div>
+    </div>
+
+    <!-- 附加简单脚本：仅供演示交互提示，非样式必需，但帮助理解使用场景 -->
+    <script>
+        // 若想演示系统暗色模式适配，不需要额外逻辑，但可以提供一个快速控制台提醒
+        (function () {
+            // 此脚本仅用于在控制台输出友好的样式集成指引，不会影响textarea核心表现
+            console.log("🎯 暗黑模式textarea样式已加载 —— 直接使用 .dark-textarea 类即可获得专业深色输入框效果");
+            console.log("💡 配合全局暗黑主题：可设置父级背景#0A0C12，搭配 textarea 类 .dark-textarea 获得完美沉浸式体验");
+            // 增加一个模拟动态的暗色开关思路演示(非必须，仅展示如何集成)
+            const styleGuide = document.createElement('div');
+            styleGuide.style.display = 'none';
+            document.body.appendChild(styleGuide);
+        })();
+    </script>
+</body>
+
+</html>

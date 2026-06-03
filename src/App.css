@@ -188,14 +188,32 @@
   font-size: 20px;
   font-family: "Microsoft YaHei", sans-serif;
   line-height: 1.5;
+  padding: 5px 15px;
+  color: #EDF2FB;
+   resize: vertical;
+  border: 1px solid #2A2E3F;
+  border-radius: 18px;
+  outline: none;
+  caret-color: #7C8EFF;
+  transition: all 0.2s ease;
+}
+.txtinput:focus {
+    border-color: #6D85FF;
+    box-shadow: 0 0 0 3px rgba(109, 133, 255, 0.25);
+}
+.txtinput::placeholder { color: #5C627F; }
+.txtinput:hover {
+    border-color: #4E5679;
 }
 
 .content_left{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-right: 10px;
 }
 .content_right{
   display: flex;
   flex-direction: column;
+  margin-left: 10px;
 }
